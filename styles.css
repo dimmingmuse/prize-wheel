@@ -205,13 +205,15 @@ body {
     width: 400px;
     height: 400px;
     border-radius: 50%;
-    padding: 15px;
     background: linear-gradient(135deg, #3d3d5c 0%, #1a1a2e 100%);
     box-shadow: 
         var(--shadow-soft),
         inset 0 2px 10px rgba(255, 255, 255, 0.1),
         0 0 0 8px rgba(255, 215, 0, 0.3),
         0 0 60px rgba(255, 215, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .wheel-glow {
@@ -707,17 +709,13 @@ body {
     }
     
     #wheelCanvas {
-        width: 290px;
-        height: 290px;
+        width: 320px;
+        height: 320px;
     }
     
     .wheel-center {
         width: 50px;
         height: 50px;
-    }
-    
-    .wheel-center:hover {
-        transform: translate(-50%, -50%) scale(1.08);
     }
     
     .center-text {
