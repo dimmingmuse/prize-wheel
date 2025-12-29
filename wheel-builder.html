@@ -785,20 +785,26 @@
             <div class="card-title">
                 <span>🔗</span> Generate & Share
             </div>
-            <div class="form-group" style="margin-bottom: 1rem;">
+            <div class="form-group" style="margin-bottom: 1.5rem;">
                 <label for="urlSpins">Number of spins (leave empty to ask user)</label>
-                <input type="number" id="urlSpins" min="1" max="20" placeholder="Optional" style="width: 150px;">
+                <input type="number" id="urlSpins" min="1" max="20" placeholder="Optional" style="width: 100%; max-width: 200px; padding: 0.75rem; font-size: 1.1rem;">
             </div>
-            <div class="btn-row">
-                <button class="btn btn-accent" onclick="generateURL()">
-                    <span>✨</span> Generate URL
-                </button>
-                <button class="btn btn-primary" onclick="copyURL()">
-                    <span>📋</span> Copy URL
-                </button>
+            <div class="btn-row" style="gap: 1rem;">
+                <div style="flex: 1; text-align: center;">
+                    <button class="btn btn-accent" onclick="shareLink()" style="width: 100%; margin-bottom: 0.5rem;">
+                        <span>🎰</span> Copy Share Link
+                    </button>
+                    <div style="font-size: 0.8rem; color: var(--text-secondary);">Link to spin the wheel</div>
+                </div>
+                <div style="flex: 1; text-align: center;">
+                    <button class="btn btn-secondary" onclick="editLink()" style="width: 100%; margin-bottom: 0.5rem;">
+                        <span>✏️</span> Copy Edit Link
+                    </button>
+                    <div style="font-size: 0.8rem; color: var(--text-secondary);">Link to edit this wheel</div>
+                </div>
             </div>
-            <div class="url-output" id="urlOutput">
-                Click "Generate URL" to create your shareable wheel link...
+            <div class="url-output" id="urlOutput" onclick="copyOutputUrl()" style="cursor: pointer;" title="Click to copy">
+                Links will appear here after copying...
             </div>
         </div>
     </div>
@@ -1015,7 +1021,7 @@
             }
         }
 
-        function generateURL() {
+        function shareLink() {
             const title = document.getElementById('categoryTitle').value;
             const spinsInput = document.getElementById('urlSpins');
             const spins = spinsInput ? parseInt(spinsInput.value) : null;
@@ -1047,29 +1053,64 @@
             output.textContent = fullURL;
             output.classList.add('has-url');
             
-            showToast('URL generated!');
+            copyToClipboard(fullURL, 'Share link copied!');
         }
 
-        function copyURL() {
-            const output = document.getElementById('urlOutput');
-            const url = output.textContent;
+        function editLink() {
+            const title = document.getElementById('categoryTitle').value;
+            const spinsInput = document.getElementById('urlSpins');
+            const spins = spinsInput ? parseInt(spinsInput.value) : null;
             
-            if (url.includes('Click "Generate URL"')) {
-                generateURL();
+            const config = {
+                t: title,
+                i: items.map(item => ({
+                    n: item.name,
+                    c: item.color,
+                    e: item.icon,
+                    p: item.isPrize ? 1 : 0
+                }))
+            };
+
+            // Encode to base64 for URL safety
+            const jsonStr = JSON.stringify(config);
+            const base64 = btoa(unescape(encodeURIComponent(jsonStr)));
+            
+            // Generate URL pointing to wheel-builder.html (for editing)
+            let fullURL = `${window.location.origin}${window.location.pathname}#config=${base64}`;
+            
+            // Add spins if specified
+            if (spins && spins > 0) {
+                fullURL += `&spins=${spins}`;
             }
             
-            navigator.clipboard.writeText(document.getElementById('urlOutput').textContent).then(() => {
-                showToast('Copied to clipboard!');
+            const output = document.getElementById('urlOutput');
+            output.textContent = fullURL;
+            output.classList.add('has-url');
+            
+            copyToClipboard(fullURL, 'Edit link copied!');
+        }
+
+        function copyToClipboard(text, message) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast(message);
             }).catch(() => {
                 // Fallback
                 const textarea = document.createElement('textarea');
-                textarea.value = document.getElementById('urlOutput').textContent;
+                textarea.value = text;
                 document.body.appendChild(textarea);
                 textarea.select();
                 document.execCommand('copy');
                 document.body.removeChild(textarea);
-                showToast('Copied to clipboard!');
+                showToast(message);
             });
+        }
+
+        function copyOutputUrl() {
+            const output = document.getElementById('urlOutput');
+            const url = output.textContent;
+            if (url && !url.includes('Links will appear')) {
+                copyToClipboard(url, 'Copied to clipboard!');
+            }
         }
 
         function showToast(message) {
