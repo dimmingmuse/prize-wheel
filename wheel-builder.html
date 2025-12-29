@@ -785,6 +785,10 @@
             <div class="card-title">
                 <span>🔗</span> Generate & Share
             </div>
+            <div class="form-group" style="margin-bottom: 1rem;">
+                <label for="urlSpins">Number of spins (leave empty to ask user)</label>
+                <input type="number" id="urlSpins" min="1" max="20" placeholder="Optional" style="width: 150px;">
+            </div>
             <div class="btn-row">
                 <button class="btn btn-accent" onclick="generateURL()">
                     <span>✨</span> Generate URL
@@ -1013,6 +1017,9 @@
 
         function generateURL() {
             const title = document.getElementById('categoryTitle').value;
+            const spinsInput = document.getElementById('urlSpins');
+            const spins = spinsInput ? parseInt(spinsInput.value) : null;
+            
             const config = {
                 t: title,
                 i: items.map(item => ({
@@ -1029,7 +1036,12 @@
             
             // Generate URL pointing to index.html (the wheel spinner)
             const basePath = window.location.pathname.replace(/wheel-builder\.html$/, '');
-            const fullURL = `${window.location.origin}${basePath}index.html#config=${base64}`;
+            let fullURL = `${window.location.origin}${basePath}index.html#config=${base64}`;
+            
+            // Add spins if specified
+            if (spins && spins > 0) {
+                fullURL += `&spins=${spins}`;
+            }
             
             const output = document.getElementById('urlOutput');
             output.textContent = fullURL;

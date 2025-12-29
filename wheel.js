@@ -62,7 +62,15 @@ function parseHashConfig() {
     if (!hash.includes('config=')) return null;
     
     try {
-        const base64 = hash.split('config=')[1];
+        // Parse hash parameters (format: #config=base64&spins=3)
+        const hashContent = hash.substring(1); // Remove #
+        const params = {};
+        hashContent.split('&').forEach(part => {
+            const [key, value] = part.split('=');
+            params[key] = value;
+        });
+        
+        const base64 = params.config;
         const jsonStr = decodeURIComponent(escape(atob(base64)));
         const config = JSON.parse(jsonStr);
         
@@ -74,7 +82,8 @@ function parseHashConfig() {
                 color: item.c,
                 icon: item.e,
                 isPrize: item.p === 1
-            }))
+            })),
+            spins: params.spins ? parseInt(params.spins) : null
         };
     } catch (e) {
         console.error('Failed to parse custom config:', e);
@@ -125,7 +134,12 @@ async function init() {
     // Custom wheel from wheel-builder (highest priority)
     if (params.customConfig) {
         session = [];
-        promptForSpinsCustom(params.customConfig);
+        // If spins is specified in URL, skip the prompt
+        if (params.customConfig.spins && params.customConfig.spins > 0) {
+            startCustomWheel(params.customConfig, params.customConfig.spins);
+        } else {
+            promptForSpinsCustom(params.customConfig);
+        }
         return;
     }
     
@@ -1010,8 +1024,12 @@ function hideFinalResults() {
     // Check if this was a custom wheel
     const customConfig = parseHashConfig();
     if (customConfig) {
-        // Reload the custom wheel prompt
-        promptForSpinsCustom(customConfig);
+        // If spins was in URL, restart with same spins; otherwise prompt
+        if (customConfig.spins && customConfig.spins > 0) {
+            startCustomWheel(customConfig, customConfig.spins);
+        } else {
+            promptForSpinsCustom(customConfig);
+        }
     } else {
         // Go back to category selector
         showCategorySelector();
@@ -1102,7 +1120,11 @@ document.addEventListener('keydown', (e) => {
 window.addEventListener('popstate', () => {
     const params = getUrlParams();
     if (params.customConfig) {
-        promptForSpinsCustom(params.customConfig);
+        if (params.customConfig.spins && params.customConfig.spins > 0) {
+            startCustomWheel(params.customConfig, params.customConfig.spins);
+        } else {
+            promptForSpinsCustom(params.customConfig);
+        }
     } else if (params.category && config && config.categories[params.category]) {
         const spins = params.spins || config.defaultSpins || 1;
         startCategory(params.category, spins);
