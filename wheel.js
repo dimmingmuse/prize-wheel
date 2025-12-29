@@ -52,8 +52,34 @@ function getUrlParams() {
     return {
         category: params.get('category'),
         spins: parseInt(params.get('spins')) || null,
-        session: params.get('session')  // Format: "category1:spins,category2:spins"
+        session: params.get('session'),  // Format: "category1:spins,category2:spins"
+        customConfig: parseHashConfig()   // Custom wheel from wheel-builder
     };
+}
+
+function parseHashConfig() {
+    const hash = window.location.hash;
+    if (!hash.includes('config=')) return null;
+    
+    try {
+        const base64 = hash.split('config=')[1];
+        const jsonStr = decodeURIComponent(escape(atob(base64)));
+        const config = JSON.parse(jsonStr);
+        
+        // Convert from wheel-builder format to wheel format
+        return {
+            title: config.t || 'Custom Wheel',
+            choices: (config.i || []).map(item => ({
+                name: item.n,
+                color: item.c,
+                icon: item.e,
+                isPrize: item.p === 1
+            }))
+        };
+    } catch (e) {
+        console.error('Failed to parse custom config:', e);
+        return null;
+    }
 }
 
 function parseSession(sessionStr) {
@@ -95,6 +121,13 @@ async function init() {
     }
     
     const params = getUrlParams();
+    
+    // Custom wheel from wheel-builder (highest priority)
+    if (params.customConfig) {
+        session = [];
+        promptForSpinsCustom(params.customConfig);
+        return;
+    }
     
     if (params.session) {
         // Multi-category session mode
@@ -215,6 +248,97 @@ function promptForSpins(categoryKey, category) {
             document.removeEventListener('keydown', handleModalKeys);
         }
     });
+}
+
+// Prompt for spins with custom config (from wheel-builder)
+function promptForSpinsCustom(customConfig) {
+    // Get the icon from the title (first emoji) or use default
+    const titleIcon = customConfig.title.match(/[\p{Emoji}]/u)?.[0] || '🎯';
+    
+    const modal = document.createElement('div');
+    modal.className = 'celebration-overlay active';
+    modal.innerHTML = `
+        <div class="winner-card" style="animation: card-pop 0.3s ease">
+            <div class="winner-icon">${titleIcon}</div>
+            <h2 class="winner-title" style="font-size: 1.5rem; background: linear-gradient(135deg, var(--accent-gold) 0%, #fff5cc 100%); -webkit-background-clip: text; background-clip: text; color: transparent;">
+                ${customConfig.title}
+            </h2>
+            <div class="spins-input-container" style="flex-direction: column; gap: 0.75rem; margin: 1.5rem 0;">
+                <label for="spinCount" style="color: #b8b8d1;">How many spins?</label>
+                <input type="number" id="spinCount" class="spins-input" value="1" min="1" max="20">
+            </div>
+            <button class="continue-btn" id="startSpinBtn">Let's Spin! 🎰</button>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    const input = modal.querySelector('#spinCount');
+    const startBtn = modal.querySelector('#startSpinBtn');
+    
+    input.focus();
+    input.select();
+    
+    const start = () => {
+        const spins = Math.max(1, Math.min(20, parseInt(input.value) || 1));
+        modal.remove();
+        document.removeEventListener('keydown', handleModalKeys);
+        startCustomWheel(customConfig, spins);
+    };
+    
+    const handleModalKeys = (e) => {
+        if (e.code === 'Space' || e.code === 'Enter') {
+            e.preventDefault();
+            start();
+        } else if (e.code === 'Escape') {
+            modal.remove();
+            document.removeEventListener('keydown', handleModalKeys);
+            showCategorySelector();
+        }
+    };
+    
+    document.addEventListener('keydown', handleModalKeys);
+    
+    startBtn.addEventListener('click', start);
+    
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.remove();
+            document.removeEventListener('keydown', handleModalKeys);
+            showCategorySelector();
+        }
+    });
+}
+
+// Start a custom wheel (from wheel-builder)
+async function startCustomWheel(customConfig, spins) {
+    // Create a temporary category object
+    currentCategory = {
+        title: customConfig.title,
+        choices: customConfig.choices
+    };
+    choices = customConfig.choices;
+    totalSpins = spins;
+    spinsRemaining = spins;
+    chosenResults = [];
+    currentRotation = 0;
+    isSpinning = false;
+    
+    // Update UI
+    pageTitle.textContent = customConfig.title;
+    subtitle.textContent = `${choices.length} choices • ${spins} spin${spins > 1 ? 's' : ''}`;
+    
+    // Show wheel, hide selector
+    categorySelector.classList.add('hidden');
+    wheelStage.classList.remove('hidden');
+    controls.classList.remove('hidden');
+    resultsPanel.classList.remove('hidden');
+    
+    // Preload images, then draw and enable
+    await preloadImages(choices);
+    drawWheel();
+    updateUI();
+    spinBtn.disabled = false;
 }
 
 // ===== Start Category =====
@@ -699,10 +823,10 @@ function getPointerAngleFromDOM() {
 
   const p = document.querySelector('.wheel-pointer').getBoundingClientRect();
   const tipX = p.left + p.width / 2;
-  const tipY = p.bottom; // approx tip for ▼
+  const tipY = p.bottom; // approx tip for â–¼
 
-  let a = Math.atan2(tipY - centerY, tipX - centerX); // -π..π
-  if (a < 0) a += 2 * Math.PI;                         // 0..2π
+  let a = Math.atan2(tipY - centerY, tipX - centerX); // -Ï€..Ï€
+  if (a < 0) a += 2 * Math.PI;                         // 0..2Ï€
   return a;
 }
 
@@ -882,10 +1006,18 @@ function hideFinalResults() {
     sessionIndex = 0;
     sessionResults = [];
     pendingResult = null;
-    // Go back to category selector
-    showCategorySelector();
-    // Clear URL params
-    window.history.pushState({}, '', window.location.pathname);
+    
+    // Check if this was a custom wheel
+    const customConfig = parseHashConfig();
+    if (customConfig) {
+        // Reload the custom wheel prompt
+        promptForSpinsCustom(customConfig);
+    } else {
+        // Go back to category selector
+        showCategorySelector();
+        // Clear URL params
+        window.history.pushState({}, '', window.location.pathname);
+    }
 }
 
 // ===== UI Updates =====
@@ -969,7 +1101,9 @@ document.addEventListener('keydown', (e) => {
 // Handle back button
 window.addEventListener('popstate', () => {
     const params = getUrlParams();
-    if (params.category && config && config.categories[params.category]) {
+    if (params.customConfig) {
+        promptForSpinsCustom(params.customConfig);
+    } else if (params.category && config && config.categories[params.category]) {
         const spins = params.spins || config.defaultSpins || 1;
         startCategory(params.category, spins);
     } else {

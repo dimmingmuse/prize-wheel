@@ -1,88 +1,88 @@
 {
   "categories": {
     "appetizer": {
-      "title": "🥗 Appetizer",
+      "title": "ðŸ¥— Appetizer",
       "choices": [
-        { "name": "Bruschetta", "color": "#E74C3C", "icon": "🍅", "isPrize": true },
-        { "name": "Soup", "color": "#F39C12", "icon": "🍲", "isPrize": true },
-        { "name": "Salad", "color": "#2ECC71", "icon": "🥗", "isPrize": true },
-        { "name": "Shrimp Cocktail", "color": "#E91E63", "icon": "🦐", "isPrize": true },
-        { "name": "Cheese Board", "color": "#FFC107", "icon": "🧀", "isPrize": true },
-        { "name": "Skip Appetizer", "color": "#95A5A6", "icon": "⏭️", "isPrize": false }
+        { "name": "Bruschetta", "color": "#E74C3C", "icon": "ðŸ…", "isPrize": true },
+        { "name": "Soup", "color": "#F39C12", "icon": "ðŸ²", "isPrize": true },
+        { "name": "Salad", "color": "#2ECC71", "icon": "ðŸ¥—", "isPrize": true },
+        { "name": "Shrimp Cocktail", "color": "#E91E63", "icon": "ðŸ¦", "isPrize": true },
+        { "name": "Cheese Board", "color": "#FFC107", "icon": "ðŸ§€", "isPrize": true },
+        { "name": "Skip Appetizer", "color": "#95A5A6", "icon": "â­ï¸", "isPrize": false }
       ]
     },
     "main": {
-      "title": "🍽️ Main Course",
+      "title": "ðŸ½ï¸ Main Course",
       "choices": [
-        { "name": "Steak", "color": "#C0392B", "icon": "🥩", "isPrize": true },
-        { "name": "Salmon", "color": "#E91E63", "icon": "🐟", "isPrize": true },
-        { "name": "Chicken", "color": "#F5B041", "icon": "🍗", "isPrize": true },
-        { "name": "Pasta", "color": "#F4D03F", "icon": "🍝", "isPrize": true },
-        { "name": "Vegetarian", "color": "#27AE60", "icon": "🥬", "isPrize": true },
-        { "name": "Pizza", "color": "#E74C3C", "icon": "🍕", "isPrize": true },
-        { "name": "Tacos", "color": "#F39C12", "icon": "🌮", "isPrize": true },
-        { "name": "Sushi", "color": "#3498DB", "icon": "🍣", "isPrize": true }
+        { "name": "Steak", "color": "#C0392B", "icon": "ðŸ¥©", "isPrize": true },
+        { "name": "Salmon", "color": "#E91E63", "icon": "ðŸŸ", "isPrize": true },
+        { "name": "Chicken", "color": "#F5B041", "icon": "ðŸ—", "isPrize": true },
+        { "name": "Pasta", "color": "#F4D03F", "icon": "ðŸ", "isPrize": true },
+        { "name": "Vegetarian", "color": "#27AE60", "icon": "ðŸ¥¬", "isPrize": true },
+        { "name": "Pizza", "color": "#E74C3C", "icon": "ðŸ•", "isPrize": true },
+        { "name": "Tacos", "color": "#F39C12", "icon": "ðŸŒ®", "isPrize": true },
+        { "name": "Sushi", "color": "#3498DB", "icon": "ðŸ£", "isPrize": true }
       ]
     },
     "sides": {
-      "title": "🥔 Side Dish",
+      "title": "ðŸ¥” Side Dish",
       "choices": [
-        { "name": "Mashed Potatoes", "color": "#F5DEB3", "icon": "🥔", "isPrize": true },
-        { "name": "French Fries", "color": "#F4D03F", "icon": "🍟", "isPrize": true },
-        { "name": "Rice", "color": "#FDFEFE", "icon": "🍚", "isPrize": true },
-        { "name": "Steamed Veggies", "color": "#2ECC71", "icon": "🥦", "isPrize": true },
-        { "name": "Coleslaw", "color": "#AED581", "icon": "🥬", "isPrize": true },
-        { "name": "Mac & Cheese", "color": "#FFCA28", "icon": "🧀", "isPrize": true },
-        { "name": "Bread Rolls", "color": "#D7A86E", "icon": "🥖", "isPrize": true },
-        { "name": "Corn", "color": "#FDD835", "icon": "🌽", "isPrize": true },
-        { "name": "No Side", "color": "#95A5A6", "icon": "❌", "isPrize": false }
+        { "name": "Mashed Potatoes", "color": "#F5DEB3", "icon": "ðŸ¥”", "isPrize": true },
+        { "name": "French Fries", "color": "#F4D03F", "icon": "ðŸŸ", "isPrize": true },
+        { "name": "Rice", "color": "#FDFEFE", "icon": "ðŸš", "isPrize": true },
+        { "name": "Steamed Veggies", "color": "#2ECC71", "icon": "ðŸ¥¦", "isPrize": true },
+        { "name": "Coleslaw", "color": "#AED581", "icon": "ðŸ¥¬", "isPrize": true },
+        { "name": "Mac & Cheese", "color": "#FFCA28", "icon": "ðŸ§€", "isPrize": true },
+        { "name": "Bread Rolls", "color": "#D7A86E", "icon": "ðŸ¥–", "isPrize": true },
+        { "name": "Corn", "color": "#FDD835", "icon": "ðŸŒ½", "isPrize": true },
+        { "name": "No Side", "color": "#95A5A6", "icon": "âŒ", "isPrize": false }
       ]
     },
     "dessert": {
-      "title": "🍰 Dessert",
+      "title": "ðŸ° Dessert",
       "choices": [
-        { "name": "Ice Cream", "color": "#FFB6C1", "icon": "🍦", "isPrize": true },
-        { "name": "Cake", "color": "#FF69B4", "icon": "🎂", "isPrize": true },
-        { "name": "Pie", "color": "#D2691E", "icon": "🥧", "isPrize": true },
-        { "name": "Cookies", "color": "#8B4513", "icon": "🍪", "isPrize": true },
-        { "name": "Cheesecake", "color": "#FFFACD", "icon": "🍰", "isPrize": true },
-        { "name": "Fruit", "color": "#FF6347", "icon": "🍓", "isPrize": true },
-        { "name": "Chocolate", "color": "#5D4037", "icon": "🍫", "isPrize": true },
-        { "name": "No Dessert", "color": "#95A5A6", "icon": "😢", "isPrize": false }
+        { "name": "Ice Cream", "color": "#FFB6C1", "icon": "ðŸ¦", "isPrize": true },
+        { "name": "Cake", "color": "#FF69B4", "icon": "ðŸŽ‚", "isPrize": true },
+        { "name": "Pie", "color": "#D2691E", "icon": "ðŸ¥§", "isPrize": true },
+        { "name": "Cookies", "color": "#8B4513", "icon": "ðŸª", "isPrize": true },
+        { "name": "Cheesecake", "color": "#FFFACD", "icon": "ðŸ°", "isPrize": true },
+        { "name": "Fruit", "color": "#FF6347", "icon": "ðŸ“", "isPrize": true },
+        { "name": "Chocolate", "color": "#5D4037", "icon": "ðŸ«", "isPrize": true },
+        { "name": "No Dessert", "color": "#95A5A6", "icon": "ðŸ˜¢", "isPrize": false }
       ]
     },
     "dinner": {
-      "title": "🍽️ What's for Dinner?",
+      "title": "ðŸ½ï¸ What's for Dinner?",
       "choices": [
-        { "name": "Pizza", "color": "#FF6B6B", "icon": "🍕", "isPrize": true },
-        { "name": "Tacos", "color": "#FFE66D", "icon": "🌮", "isPrize": true },
-        { "name": "Sushi", "color": "#4ECDC4", "icon": "🍣", "isPrize": true },
-        { "name": "Burgers", "color": "#F4A460", "icon": "🍔", "isPrize": true },
-        { "name": "Pasta", "color": "#DDA0DD", "icon": "🍝", "isPrize": true },
-        { "name": "Salad", "color": "#95E1D3", "icon": "🥗", "isPrize": true },
-        { "name": "Leftovers", "color": "#A8A8A8", "icon": "📦", "isPrize": false }
+        { "name": "Pizza", "color": "#FF6B6B", "icon": "ðŸ•", "isPrize": true },
+        { "name": "Tacos", "color": "#FFE66D", "icon": "ðŸŒ®", "isPrize": true },
+        { "name": "Sushi", "color": "#4ECDC4", "icon": "ðŸ£", "isPrize": true },
+        { "name": "Burgers", "color": "#F4A460", "icon": "ðŸ”", "isPrize": true },
+        { "name": "Pasta", "color": "#DDA0DD", "icon": "ðŸ", "isPrize": true },
+        { "name": "Salad", "color": "#95E1D3", "icon": "ðŸ¥—", "isPrize": true },
+        { "name": "Leftovers", "color": "#A8A8A8", "icon": "ðŸ“¦", "isPrize": false }
       ]
     },
     "activities": {
-      "title": "🎉 Activity Picker",
+      "title": "ðŸŽ‰ Activity Picker",
       "choices": [
-        { "name": "Movie Night", "color": "#9B59B6", "icon": "🎬", "isPrize": true },
-        { "name": "Game Night", "color": "#3498DB", "icon": "🎮", "isPrize": true },
-        { "name": "Go for a Walk", "color": "#2ECC71", "icon": "🚶", "isPrize": true },
-        { "name": "Arts & Crafts", "color": "#E74C3C", "icon": "🎨", "isPrize": true },
-        { "name": "Read Books", "color": "#F39C12", "icon": "📚", "isPrize": true },
-        { "name": "Chores", "color": "#7F8C8D", "icon": "🧹", "isPrize": false }
+        { "name": "Movie Night", "color": "#9B59B6", "icon": "ðŸŽ¬", "isPrize": true },
+        { "name": "Game Night", "color": "#3498DB", "icon": "ðŸŽ®", "isPrize": true },
+        { "name": "Go for a Walk", "color": "#2ECC71", "icon": "ðŸš¶", "isPrize": true },
+        { "name": "Arts & Crafts", "color": "#E74C3C", "icon": "ðŸŽ¨", "isPrize": true },
+        { "name": "Read Books", "color": "#F39C12", "icon": "ðŸ“š", "isPrize": true },
+        { "name": "Chores", "color": "#7F8C8D", "icon": "ðŸ§¹", "isPrize": false }
       ]
     },
     "chores": {
-      "title": "🧹 Chore Wheel",
+      "title": "ðŸ§¹ Chore Wheel",
       "choices": [
-        { "name": "Dishes", "color": "#5DADE2", "icon": "🍽️", "isPrize": false },
-        { "name": "Vacuum", "color": "#AF7AC5", "icon": "🧹", "isPrize": false },
-        { "name": "Laundry", "color": "#58D68D", "icon": "👕", "isPrize": false },
-        { "name": "Take Out Trash", "color": "#85929E", "icon": "🗑️", "isPrize": false },
-        { "name": "Clean Bathroom", "color": "#5499C7", "icon": "🚿", "isPrize": false },
-        { "name": "Free Pass!", "color": "#F4D03F", "icon": "⭐", "isPrize": true }
+        { "name": "Dishes", "color": "#5DADE2", "icon": "ðŸ½ï¸", "isPrize": false },
+        { "name": "Vacuum", "color": "#AF7AC5", "icon": "ðŸ§¹", "isPrize": false },
+        { "name": "Laundry", "color": "#58D68D", "icon": "ðŸ‘•", "isPrize": false },
+        { "name": "Take Out Trash", "color": "#85929E", "icon": "ðŸ—‘ï¸", "isPrize": false },
+        { "name": "Clean Bathroom", "color": "#5499C7", "icon": "ðŸš¿", "isPrize": false },
+        { "name": "Free Pass!", "color": "#F4D03F", "icon": "â­", "isPrize": true }
       ]
     }
   },

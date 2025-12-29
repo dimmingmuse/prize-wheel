@@ -964,7 +964,7 @@
                             <span class="toggle-slider"></span>
                         </label>
                     </div>
-                    <button class="delete-btn" onclick="deleteItem(${index})" title="Delete item">✕</button>
+                    <button class="delete-btn" onclick="deleteItem(${index})" title="Delete item">âœ•</button>
                 </div>
             `).join('');
         }
@@ -1027,8 +1027,9 @@
             const jsonStr = JSON.stringify(config);
             const base64 = btoa(unescape(encodeURIComponent(jsonStr)));
             
-            // Generate URL with hash parameter
-            const fullURL = `${window.location.origin}${window.location.pathname}#config=${base64}`;
+            // Generate URL pointing to index.html (the wheel spinner)
+            const basePath = window.location.pathname.replace(/wheel-builder\.html$/, '');
+            const fullURL = `${window.location.origin}${basePath}index.html#config=${base64}`;
             
             const output = document.getElementById('urlOutput');
             output.textContent = fullURL;
