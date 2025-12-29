@@ -1176,6 +1176,10 @@
                 return;
             }
             
+            // Extract spins if present
+            const spinsMatch = url.match(/[&#]spins=(\d+)/);
+            const spins = spinsMatch ? parseInt(spinsMatch[1]) : null;
+            
             try {
                 const base64 = configMatch[1];
                 const jsonStr = decodeURIComponent(escape(atob(base64)));
@@ -1190,6 +1194,12 @@
                 }));
                 renderItems();
                 
+                // Set spins if it was in the URL
+                const spinsInput = document.getElementById('urlSpins');
+                if (spinsInput) {
+                    spinsInput.value = spins || '';
+                }
+                
                 document.getElementById('loadUrlModal').classList.remove('active');
                 showToast('Wheel loaded!');
             } catch (e) {
@@ -1203,7 +1213,15 @@
             const hash = window.location.hash;
             if (hash.includes('config=')) {
                 try {
-                    const base64 = hash.split('config=')[1];
+                    // Parse hash parameters (format: #config=base64&spins=3)
+                    const hashContent = hash.substring(1); // Remove #
+                    const params = {};
+                    hashContent.split('&').forEach(part => {
+                        const [key, value] = part.split('=');
+                        params[key] = value;
+                    });
+                    
+                    const base64 = params.config;
                     const jsonStr = decodeURIComponent(escape(atob(base64)));
                     const config = JSON.parse(jsonStr);
                     
@@ -1215,6 +1233,15 @@
                         isPrize: item.p === 1
                     }));
                     renderItems();
+                    
+                    // Set spins if it was in the URL
+                    if (params.spins) {
+                        const spinsInput = document.getElementById('urlSpins');
+                        if (spinsInput) {
+                            spinsInput.value = params.spins;
+                        }
+                    }
+                    
                     return true;
                 } catch (e) {
                     console.error('Failed to parse URL config:', e);
