@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎡 Wheel Builder</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #1a1a2e;
+            --bg-secondary: #16213e;
+            --bg-card: #0f3460;
+            --accent-pink: #e94560;
+            --accent-yellow: #f9d923;
+            --accent-cyan: #00fff5;
+            --accent-purple: #a855f7;
+            --text-primary: #ffffff;
+            --text-secondary: #94a3b8;
+            --border-glow: rgba(233, 69, 96, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Fredoka', sans-serif;
+            background: var(--bg-primary);
+            min-height: 100vh;
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        /* Animated background */
+        .bg-decoration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-decoration::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(ellipse at 20% 30%, rgba(233, 69, 96, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 70%, rgba(0, 255, 245, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(168, 85, 247, 0.05) 0%, transparent 60%);
+            animation: bgFloat 20s ease-in-out infinite;
+        }
+
+        @keyframes bgFloat {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(2%, -2%) rotate(1deg); }
+            66% { transform: translate(-1%, 1%) rotate(-1deg); }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            font-size: 4rem;
+            margin-bottom: 0.5rem;
+            animation: spin 10s linear infinite;
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-yellow), var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 
+                0 4px 20px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            animation: fadeInUp 0.6s ease-out backwards;
+        }
+
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .card-title span {
+            font-size: 1.5rem;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        input[type="text"],
+        input[type="color"] {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--accent-pink);
+            box-shadow: 0 0 0 3px var(--border-glow);
+        }
+
+        input[type="color"] {
+            height: 50px;
+            padding: 0.25rem;
+            cursor: pointer;
+        }
+
+        /* Column Headers */
+        .column-headers {
+            display: grid;
+            grid-template-columns: 60px 1fr 70px 60px 50px;
+            gap: 0.75rem;
+            padding: 0 1rem 0.5rem 1rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .column-headers span:nth-child(4) {
+            text-align: center;
+        }
+
+        /* Item List */
+        .item-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .item-row {
+            display: grid;
+            grid-template-columns: 60px 1fr 70px 60px 50px;
+            gap: 0.75rem;
+            align-items: center;
+            background: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: 1rem;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            animation: itemSlideIn 0.3s ease-out backwards;
+        }
+
+        @keyframes itemSlideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .item-row:hover {
+            border-color: rgba(255, 255, 255, 0.1);
+            transform: translateX(4px);
+        }
+
+        .item-row input[type="color"] {
+            height: 44px;
+            border-radius: 0.5rem;
+        }
+
+        .item-row input[type="text"] {
+            padding: 0.75rem;
+        }
+
+        /* Icon Picker Button */
+        .icon-picker-btn {
+            width: 100%;
+            height: 44px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.5rem;
+            background: var(--bg-primary);
+            font-size: 1.4rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icon-picker-btn:hover {
+            border-color: var(--accent-purple);
+            transform: scale(1.05);
+        }
+
+        /* Emoji Help Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .modal {
+            background: var(--bg-card);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            max-width: 400px;
+            width: 90%;
+            transform: scale(0.9);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .emoji-help-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .emoji-help-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: 0.75rem;
+        }
+
+        .emoji-help-item kbd {
+            background: var(--bg-primary);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 0.5rem;
+            padding: 0.4rem 0.75rem;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--accent-cyan);
+            white-space: nowrap;
+            box-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .emoji-help-item span {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .modal-close {
+            margin-top: 1.5rem;
+            width: 100%;
+        }
+
+        .emoji-help-note {
+            margin-top: 1.25rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .emoji-help-note kbd {
+            background: var(--bg-primary);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 0.35rem;
+            padding: 0.2rem 0.5rem;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--accent-cyan);
+            box-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .emoji-input-container {
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .emoji-input-large {
+            width: 100px;
+            height: 80px;
+            text-align: center;
+            font-size: 3rem;
+            padding: 0.5rem;
+            border: 3px solid var(--accent-purple);
+            border-radius: 1rem;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            cursor: text;
+            transition: all 0.3s ease;
+        }
+
+        .emoji-input-large:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 0 4px rgba(0, 255, 245, 0.3);
+        }
+
+        .emoji-input-label {
+            display: block;
+            margin-bottom: 0.75rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .url-input-container {
+            margin-bottom: 1rem;
+        }
+
+        .url-input-label {
+            display: block;
+            margin-bottom: 0.75rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .url-input-large {
+            width: 100%;
+            height: 100px;
+            padding: 0.75rem;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem;
+            background: var(--bg-secondary);
+            color: var(--accent-cyan);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+            resize: none;
+            transition: all 0.3s ease;
+        }
+
+        .url-input-large:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 0 3px rgba(0, 255, 245, 0.3);
+        }
+
+        .url-help-note {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-btn-row {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .modal-btn-row .btn {
+            flex: 1;
+        }
+
+        /* Prize Toggle */
+        .prize-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 28px;
+            cursor: pointer;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg-primary);
+            border-radius: 28px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .toggle-slider::before {
+            content: '';
+            position: absolute;
+            height: 20px;
+            width: 20px;
+            left: 2px;
+            bottom: 2px;
+            background: var(--text-secondary);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-switch input:checked + .toggle-slider {
+            background: var(--accent-yellow);
+            border-color: var(--accent-yellow);
+        }
+
+        .toggle-switch input:checked + .toggle-slider::before {
+            transform: translateX(22px);
+            background: var(--bg-primary);
+        }
+
+        /* Delete Button */
+        .delete-btn {
+            width: 44px;
+            height: 44px;
+            border: none;
+            border-radius: 0.5rem;
+            background: rgba(233, 69, 96, 0.2);
+            color: var(--accent-pink);
+            font-size: 1.25rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .delete-btn:hover {
+            background: var(--accent-pink);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 0.75rem;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-pink), #ff6b9d);
+            color: white;
+            box-shadow: 0 4px 15px rgba(233, 69, 96, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(233, 69, 96, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+
+        .btn-accent {
+            background: linear-gradient(135deg, var(--accent-cyan), #00d4c8);
+            color: var(--bg-primary);
+            box-shadow: 0 4px 15px rgba(0, 255, 245, 0.3);
+        }
+
+        .btn-accent:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 255, 245, 0.4);
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        /* URL Output */
+        .url-output {
+            background: var(--bg-primary);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            word-break: break-all;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--accent-cyan);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .url-output::before {
+            content: 'Generated URL';
+            position: absolute;
+            top: -0.75rem;
+            left: 1rem;
+            background: var(--bg-card);
+            padding: 0 0.5rem;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .url-output.has-url {
+            border-color: var(--accent-cyan);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 10px rgba(0, 255, 245, 0.2); }
+            to { box-shadow: 0 0 20px rgba(0, 255, 245, 0.4); }
+        }
+
+        /* Template Cards */
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .template-card {
+            background: var(--bg-secondary);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            padding: 1.25rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .template-card:hover {
+            border-color: var(--accent-yellow);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .template-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .template-card .name {
+            font-weight: 600;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+            padding: 1rem 2rem;
+            border-radius: 1rem;
+            font-weight: 600;
+            box-shadow: 0 4px 20px rgba(0, 255, 245, 0.4);
+            transition: all 0.3s ease;
+            z-index: 1001;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            .column-headers {
+                display: none;
+            }
+
+            .item-row {
+                grid-template-columns: 50px 1fr 50px;
+                gap: 0.5rem;
+            }
+
+            .item-row input[type="text"]:not(.icon-input) {
+                grid-column: 1 / -1;
+                order: 1;
+            }
+
+            .icon-picker-btn {
+                order: 2;
+            }
+
+            .prize-toggle {
+                order: 3;
+            }
+
+            .delete-btn {
+                order: 4;
+            }
+
+            .item-row input[type="color"] {
+                order: 0;
+            }
+
+            .emoji-help-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-decoration"></div>
+    
+    <div class="container">
+        <header class="header">
+            <div class="logo">🎡</div>
+            <h1>Wheel Builder</h1>
+            <p class="subtitle">Create your custom decision wheel and save it as a bookmarkable URL</p>
+        </header>
+
+        <div class="card">
+            <div class="card-title">
+                <span>📝</span> Quick Start Templates
+            </div>
+            <div class="template-grid" id="templateGrid"></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">
+                <span>⚙️</span> Wheel Settings
+            </div>
+            <div class="form-group">
+                <label for="categoryTitle">Category Title</label>
+                <input type="text" id="categoryTitle" placeholder="🎯 My Custom Wheel" value="🎯 My Custom Wheel">
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">
+                <span>🎨</span> Wheel Items
+            </div>
+            
+            <div class="column-headers">
+                <span>Color</span>
+                <span>Name</span>
+                <span>Icon</span>
+                <span>Prize?</span>
+                <span></span>
+            </div>
+            
+            <div class="item-list" id="itemList"></div>
+            <div class="btn-row" style="margin-top: 1.5rem;">
+                <button class="btn btn-secondary" onclick="addItem()">
+                    <span>➕</span> Add Item
+                </button>
+                <button class="btn btn-secondary" onclick="clearAll()">
+                    <span>🗑️</span> Clear All
+                </button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">
+                <span>🔗</span> Generate & Share
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-accent" onclick="generateURL()">
+                    <span>✨</span> Generate URL
+                </button>
+                <button class="btn btn-primary" onclick="copyURL()">
+                    <span>📋</span> Copy URL
+                </button>
+            </div>
+            <div class="url-output" id="urlOutput">
+                Click "Generate URL" to create your shareable wheel link...
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">Copied to clipboard!</div>
+
+    <!-- Emoji Help Modal -->
+    <div class="modal-overlay" id="emojiHelpModal" onclick="closeEmojiModal(event)">
+        <div class="modal">
+            <div class="modal-title">
+                <span>💡</span> Choose an Emoji Icon
+            </div>
+            
+            <div class="emoji-input-container">
+                <label class="emoji-input-label">Click below, then open your emoji picker:</label>
+                <input type="text" class="emoji-input-large" id="modalEmojiInput" placeholder="🎯">
+            </div>
+            
+            <div class="emoji-help-content">
+                <div class="emoji-help-item">
+                    <kbd>Win + .</kbd>
+                    <span>Windows emoji picker</span>
+                </div>
+                <div class="emoji-help-item">
+                    <kbd>Cmd + Ctrl + Space</kbd>
+                    <span>Mac emoji picker</span>
+                </div>
+                <div class="emoji-help-item">
+                    <kbd>Ctrl + .</kbd>
+                    <span>Chromebook emoji</span>
+                </div>
+            </div>
+            <p class="emoji-help-note">Press <kbd>Esc</kbd> to close when done</p>
+            <button class="btn btn-accent modal-close" onclick="saveAndCloseEmojiModal()">Done</button>
+        </div>
+    </div>
+
+    <!-- Load URL Modal -->
+    <div class="modal-overlay" id="loadUrlModal" onclick="closeLoadUrlModal(event)">
+        <div class="modal">
+            <div class="modal-title">
+                <span>🔗</span> Load from Saved URL
+            </div>
+            
+            <div class="url-input-container">
+                <label class="url-input-label">Paste your saved wheel URL:</label>
+                <textarea class="url-input-large" id="loadUrlInput" placeholder="https://...#config=..."></textarea>
+            </div>
+            
+            <p class="url-help-note">Paste the full URL you bookmarked earlier</p>
+            <div class="modal-btn-row">
+                <button class="btn btn-secondary" onclick="closeLoadUrlModal()">Cancel</button>
+                <button class="btn btn-accent" onclick="loadFromUrl()">Load</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Template configurations
+        const templates = {
+            dinner: {
+                title: "🍽️ What's for Dinner?",
+                items: [
+                    { name: "Pizza", color: "#FF6B6B", icon: "🍕", isPrize: true },
+                    { name: "Tacos", color: "#FFE66D", icon: "🌮", isPrize: true },
+                    { name: "Sushi", color: "#4ECDC4", icon: "🍣", isPrize: true },
+                    { name: "Burgers", color: "#F4A460", icon: "🍔", isPrize: true },
+                    { name: "Pasta", color: "#DDA0DD", icon: "🍝", isPrize: true },
+                    { name: "Leftovers", color: "#A8A8A8", icon: "📦", isPrize: false }
+                ]
+            },
+            activities: {
+                title: "🎉 Activity Picker",
+                items: [
+                    { name: "Movie Night", color: "#9B59B6", icon: "🎬", isPrize: true },
+                    { name: "Game Night", color: "#3498DB", icon: "🎮", isPrize: true },
+                    { name: "Go for a Walk", color: "#2ECC71", icon: "🚶", isPrize: true },
+                    { name: "Arts & Crafts", color: "#E74C3C", icon: "🎨", isPrize: true },
+                    { name: "Read Books", color: "#F39C12", icon: "📚", isPrize: true },
+                    { name: "Chores", color: "#7F8C8D", icon: "🧹", isPrize: false }
+                ]
+            },
+            chores: {
+                title: "🧹 Chore Wheel",
+                items: [
+                    { name: "Dishes", color: "#5DADE2", icon: "🍽️", isPrize: false },
+                    { name: "Vacuum", color: "#AF7AC5", icon: "🧹", isPrize: false },
+                    { name: "Laundry", color: "#58D68D", icon: "👕", isPrize: false },
+                    { name: "Take Out Trash", color: "#85929E", icon: "🗑️", isPrize: false },
+                    { name: "Free Pass!", color: "#F4D03F", icon: "⭐", isPrize: true }
+                ]
+            },
+            dessert: {
+                title: "🍰 Dessert Picker",
+                items: [
+                    { name: "Ice Cream", color: "#FFB6C1", icon: "🍦", isPrize: true },
+                    { name: "Cake", color: "#FF69B4", icon: "🎂", isPrize: true },
+                    { name: "Cookies", color: "#8B4513", icon: "🍪", isPrize: true },
+                    { name: "Fruit", color: "#FF6347", icon: "🍓", isPrize: true },
+                    { name: "No Dessert", color: "#95A5A6", icon: "😢", isPrize: false }
+                ]
+            },
+            custom: {
+                title: "🎯 My Custom Wheel",
+                items: [
+                    { name: "Option 1", color: "#E74C3C", icon: "🎯", isPrize: true },
+                    { name: "Option 2", color: "#3498DB", icon: "✨", isPrize: true },
+                    { name: "Option 3", color: "#2ECC71", icon: "🌟", isPrize: true }
+                ]
+            }
+        };
+
+        let items = [];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTemplates();
+            parseURLConfig() || loadTemplate('custom');
+            
+            // Handle input in the modal - keep only last emoji
+            const modalInput = document.getElementById('modalEmojiInput');
+            modalInput.addEventListener('input', function() {
+                const emoji = extractLastEmoji(this.value);
+                if (emoji) {
+                    this.value = emoji;
+                }
+            });
+        });
+
+        function renderTemplates() {
+            const grid = document.getElementById('templateGrid');
+            const templateData = [
+                { key: 'dinner', icon: '🍽️', name: 'Dinner' },
+                { key: 'activities', icon: '🎉', name: 'Activities' },
+                { key: 'chores', icon: '🧹', name: 'Chores' },
+                { key: 'dessert', icon: '🍰', name: 'Dessert' },
+                { key: 'custom', icon: '✨', name: 'Start Fresh' },
+                { key: 'loadurl', icon: '🔗', name: 'Load from URL' }
+            ];
+
+            grid.innerHTML = templateData.map(t => `
+                <div class="template-card" onclick="${t.key === 'loadurl' ? 'openLoadUrlModal()' : `loadTemplate('${t.key}')`}">
+                    <div class="icon">${t.icon}</div>
+                    <div class="name">${t.name}</div>
+                </div>
+            `).join('');
+        }
+
+        function loadTemplate(key) {
+            const template = templates[key];
+            document.getElementById('categoryTitle').value = template.title;
+            items = JSON.parse(JSON.stringify(template.items));
+            renderItems();
+        }
+
+        function renderItems() {
+            const list = document.getElementById('itemList');
+            list.innerHTML = items.map((item, index) => `
+                <div class="item-row" style="animation-delay: ${index * 0.05}s">
+                    <input type="color" value="${item.color}" onchange="updateItem(${index}, 'color', this.value)" title="Pick color">
+                    <input type="text" value="${escapeHtml(item.name)}" onchange="updateItem(${index}, 'name', this.value)" placeholder="Item name">
+                    <button type="button" class="icon-picker-btn" onclick="openEmojiModal(${index})">${item.icon || '➕'}</button>
+                    <div class="prize-toggle" title="${item.isPrize ? 'Prize item' : 'Not a prize'}">
+                        <label class="toggle-switch">
+                            <input type="checkbox" ${item.isPrize ? 'checked' : ''} onchange="updateItem(${index}, 'isPrize', this.checked)">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <button class="delete-btn" onclick="deleteItem(${index})" title="Delete item">✕</button>
+                </div>
+            `).join('');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function addItem() {
+            const colors = ['#E74C3C', '#3498DB', '#2ECC71', '#F39C12', '#9B59B6', '#1ABC9C', '#E91E63', '#FF5722'];
+            items.push({
+                name: `Item ${items.length + 1}`,
+                color: colors[items.length % colors.length],
+                icon: '⭐',
+                isPrize: true
+            });
+            renderItems();
+            
+            // Focus the new item's name input
+            setTimeout(() => {
+                const inputs = document.querySelectorAll('.item-row input[type="text"]:not(.icon-input)');
+                if (inputs.length > 0) {
+                    inputs[inputs.length - 1].focus();
+                    inputs[inputs.length - 1].select();
+                }
+            }, 100);
+        }
+
+        function updateItem(index, field, value) {
+            items[index][field] = value;
+        }
+
+        function deleteItem(index) {
+            items.splice(index, 1);
+            renderItems();
+        }
+
+        function clearAll() {
+            if (items.length === 0 || confirm('Clear all items?')) {
+                items = [];
+                renderItems();
+            }
+        }
+
+        function generateURL() {
+            const title = document.getElementById('categoryTitle').value;
+            const config = {
+                t: title,
+                i: items.map(item => ({
+                    n: item.name,
+                    c: item.color,
+                    e: item.icon,
+                    p: item.isPrize ? 1 : 0
+                }))
+            };
+
+            // Encode to base64 for URL safety
+            const jsonStr = JSON.stringify(config);
+            const base64 = btoa(unescape(encodeURIComponent(jsonStr)));
+            
+            // Generate URL with hash parameter
+            const fullURL = `${window.location.origin}${window.location.pathname}#config=${base64}`;
+            
+            const output = document.getElementById('urlOutput');
+            output.textContent = fullURL;
+            output.classList.add('has-url');
+            
+            showToast('URL generated!');
+        }
+
+        function copyURL() {
+            const output = document.getElementById('urlOutput');
+            const url = output.textContent;
+            
+            if (url.includes('Click "Generate URL"')) {
+                generateURL();
+            }
+            
+            navigator.clipboard.writeText(document.getElementById('urlOutput').textContent).then(() => {
+                showToast('Copied to clipboard!');
+            }).catch(() => {
+                // Fallback
+                const textarea = document.createElement('textarea');
+                textarea.value = document.getElementById('urlOutput').textContent;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showToast('Copied to clipboard!');
+            });
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        let currentEmojiIndex = null;
+
+        function openEmojiModal(index) {
+            currentEmojiIndex = index;
+            const modal = document.getElementById('emojiHelpModal');
+            const input = document.getElementById('modalEmojiInput');
+            
+            // Set current emoji value
+            input.value = items[index].icon || '';
+            
+            modal.classList.add('active');
+            
+            // Focus the input after modal animation
+            setTimeout(() => {
+                input.focus();
+            }, 100);
+        }
+
+        function closeEmojiModal(event) {
+            // Close if clicking overlay background
+            if (event && event.target !== document.getElementById('emojiHelpModal')) {
+                return;
+            }
+            saveAndCloseEmojiModal();
+        }
+
+        function saveAndCloseEmojiModal() {
+            const input = document.getElementById('modalEmojiInput');
+            
+            if (currentEmojiIndex !== null && input.value) {
+                // Extract the last valid emoji
+                const emoji = extractLastEmoji(input.value);
+                if (emoji) {
+                    items[currentEmojiIndex].icon = emoji;
+                }
+            }
+            
+            document.getElementById('emojiHelpModal').classList.remove('active');
+            currentEmojiIndex = null;
+            renderItems();
+        }
+
+        function extractLastEmoji(value) {
+            // Comprehensive emoji regex that handles:
+            // - Basic emojis
+            // - Skin tone modifiers
+            // - ZWJ sequences (family emojis, professions, etc.)
+            // - Flag sequences
+            const emojiRegex = /(?:\p{Emoji_Presentation}|\p{Emoji}\uFE0F)(?:\p{Emoji_Modifier})?(?:\u200D(?:\p{Emoji_Presentation}|\p{Emoji}\uFE0F)(?:\p{Emoji_Modifier})?)*|\p{Emoji_Modifier_Base}\p{Emoji_Modifier}?(?:\u200D(?:\p{Emoji_Presentation}|\p{Emoji}\uFE0F)(?:\p{Emoji_Modifier})?)*|\p{Regional_Indicator}{2}/gu;
+            
+            const emojis = value.match(emojiRegex) || [];
+            return emojis.length > 0 ? emojis[emojis.length - 1] : null;
+        }
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (document.getElementById('emojiHelpModal').classList.contains('active')) {
+                    saveAndCloseEmojiModal();
+                }
+                if (document.getElementById('loadUrlModal').classList.contains('active')) {
+                    closeLoadUrlModal();
+                }
+            }
+        });
+
+        function openLoadUrlModal() {
+            const modal = document.getElementById('loadUrlModal');
+            const input = document.getElementById('loadUrlInput');
+            input.value = '';
+            modal.classList.add('active');
+            setTimeout(() => input.focus(), 100);
+        }
+
+        function closeLoadUrlModal(event) {
+            if (event && event.target !== document.getElementById('loadUrlModal')) {
+                return;
+            }
+            document.getElementById('loadUrlModal').classList.remove('active');
+        }
+
+        function loadFromUrl() {
+            const input = document.getElementById('loadUrlInput');
+            const url = input.value.trim();
+            
+            if (!url) {
+                showToast('Please paste a URL');
+                return;
+            }
+            
+            // Extract the config from the URL
+            const configMatch = url.match(/#config=([A-Za-z0-9+/=]+)/);
+            if (!configMatch) {
+                showToast('Invalid URL - no config found');
+                return;
+            }
+            
+            try {
+                const base64 = configMatch[1];
+                const jsonStr = decodeURIComponent(escape(atob(base64)));
+                const config = JSON.parse(jsonStr);
+                
+                document.getElementById('categoryTitle').value = config.t || 'My Wheel';
+                items = (config.i || []).map(item => ({
+                    name: item.n,
+                    color: item.c,
+                    icon: item.e,
+                    isPrize: item.p === 1
+                }));
+                renderItems();
+                
+                document.getElementById('loadUrlModal').classList.remove('active');
+                showToast('Wheel loaded!');
+            } catch (e) {
+                console.error('Failed to parse URL config:', e);
+                showToast('Failed to parse URL');
+            }
+        }
+
+        // Parse URL on load (for editing existing configs)
+        function parseURLConfig() {
+            const hash = window.location.hash;
+            if (hash.includes('config=')) {
+                try {
+                    const base64 = hash.split('config=')[1];
+                    const jsonStr = decodeURIComponent(escape(atob(base64)));
+                    const config = JSON.parse(jsonStr);
+                    
+                    document.getElementById('categoryTitle').value = config.t || 'My Wheel';
+                    items = (config.i || []).map(item => ({
+                        name: item.n,
+                        color: item.c,
+                        icon: item.e,
+                        isPrize: item.p === 1
+                    }));
+                    renderItems();
+                    return true;
+                } catch (e) {
+                    console.error('Failed to parse URL config:', e);
+                    return false;
+                }
+            }
+            return false;
+        }
+    </script>
+</body>
+</html>
