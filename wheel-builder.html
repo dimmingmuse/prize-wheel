@@ -787,16 +787,22 @@
             </div>
             <div class="form-group" style="margin-bottom: 1.5rem;">
                 <label for="urlSpins">Number of spins (leave empty to ask user)</label>
-                <input type="number" id="urlSpins" min="1" max="20" placeholder="Optional" style="width: 100%; max-width: 200px; padding: 0.75rem; font-size: 1.1rem;">
+                <input type="number" id="urlSpins" min="1" max="20" placeholder="Optional" style="width: 100%; max-width: 200px; padding: 0.875rem 1rem; font-size: 1.1rem; border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 0.75rem; background: var(--bg-secondary); color: var(--text-primary); font-family: 'Fredoka', sans-serif;">
             </div>
-            <div class="btn-row" style="gap: 1rem;">
-                <div style="flex: 1; text-align: center;">
-                    <button class="btn btn-accent" onclick="shareLink()" style="width: 100%; margin-bottom: 0.5rem;">
-                        <span>🎰</span> Copy Share Link
+            <div class="btn-row" style="gap: 1rem; flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 140px; text-align: center;">
+                    <button class="btn btn-accent" onclick="openWheel()" style="width: 100%; margin-bottom: 0.5rem;">
+                        <span>🎰</span> Open Wheel
+                    </button>
+                    <div style="font-size: 0.8rem; color: var(--text-secondary);">Opens in new tab</div>
+                </div>
+                <div style="flex: 1; min-width: 140px; text-align: center;">
+                    <button class="btn btn-primary" onclick="shareLink()" style="width: 100%; margin-bottom: 0.5rem;">
+                        <span>📋</span> Copy Share Link
                     </button>
                     <div style="font-size: 0.8rem; color: var(--text-secondary);">Link to spin the wheel</div>
                 </div>
-                <div style="flex: 1; text-align: center;">
+                <div style="flex: 1; min-width: 140px; text-align: center;">
                     <button class="btn btn-secondary" onclick="editLink()" style="width: 100%; margin-bottom: 0.5rem;">
                         <span>✏️</span> Copy Edit Link
                     </button>
@@ -1022,41 +1028,30 @@
         }
 
         function shareLink() {
-            const title = document.getElementById('categoryTitle').value;
-            const spinsInput = document.getElementById('urlSpins');
-            const spins = spinsInput ? parseInt(spinsInput.value) : null;
-            
-            const config = {
-                t: title,
-                i: items.map(item => ({
-                    n: item.name,
-                    c: item.color,
-                    e: item.icon,
-                    p: item.isPrize ? 1 : 0
-                }))
-            };
-
-            // Encode to base64 for URL safety
-            const jsonStr = JSON.stringify(config);
-            const base64 = btoa(unescape(encodeURIComponent(jsonStr)));
-            
-            // Generate URL pointing to index.html (the wheel spinner)
-            const basePath = window.location.pathname.replace(/wheel-builder\.html$/, '');
-            let fullURL = `${window.location.origin}${basePath}index.html#config=${base64}`;
-            
-            // Add spins if specified
-            if (spins && spins > 0) {
-                fullURL += `&spins=${spins}`;
-            }
-            
+            const url = generateWheelURL();
             const output = document.getElementById('urlOutput');
-            output.textContent = fullURL;
+            output.textContent = url;
             output.classList.add('has-url');
-            
-            copyToClipboard(fullURL, 'Share link copied!');
+            copyToClipboard(url, 'Share link copied!');
         }
 
         function editLink() {
+            const url = generateEditURL();
+            const output = document.getElementById('urlOutput');
+            output.textContent = url;
+            output.classList.add('has-url');
+            copyToClipboard(url, 'Edit link copied!');
+        }
+
+        function openWheel() {
+            const url = generateWheelURL();
+            const output = document.getElementById('urlOutput');
+            output.textContent = url;
+            output.classList.add('has-url');
+            window.open(url, '_blank');
+        }
+
+        function generateWheelURL() {
             const title = document.getElementById('categoryTitle').value;
             const spinsInput = document.getElementById('urlSpins');
             const spins = spinsInput ? parseInt(spinsInput.value) : null;
@@ -1071,23 +1066,44 @@
                 }))
             };
 
-            // Encode to base64 for URL safety
             const jsonStr = JSON.stringify(config);
             const base64 = btoa(unescape(encodeURIComponent(jsonStr)));
             
-            // Generate URL pointing to wheel-builder.html (for editing)
-            let fullURL = `${window.location.origin}${window.location.pathname}#config=${base64}`;
+            const basePath = window.location.pathname.replace(/wheel-builder\.html$/, '');
+            let fullURL = `${window.location.origin}${basePath}index.html#config=${base64}`;
             
-            // Add spins if specified
             if (spins && spins > 0) {
                 fullURL += `&spins=${spins}`;
             }
             
-            const output = document.getElementById('urlOutput');
-            output.textContent = fullURL;
-            output.classList.add('has-url');
+            return fullURL;
+        }
+
+        function generateEditURL() {
+            const title = document.getElementById('categoryTitle').value;
+            const spinsInput = document.getElementById('urlSpins');
+            const spins = spinsInput ? parseInt(spinsInput.value) : null;
             
-            copyToClipboard(fullURL, 'Edit link copied!');
+            const config = {
+                t: title,
+                i: items.map(item => ({
+                    n: item.name,
+                    c: item.color,
+                    e: item.icon,
+                    p: item.isPrize ? 1 : 0
+                }))
+            };
+
+            const jsonStr = JSON.stringify(config);
+            const base64 = btoa(unescape(encodeURIComponent(jsonStr)));
+            
+            let fullURL = `${window.location.origin}${window.location.pathname}#config=${base64}`;
+            
+            if (spins && spins > 0) {
+                fullURL += `&spins=${spins}`;
+            }
+            
+            return fullURL;
         }
 
         function copyToClipboard(text, message) {
