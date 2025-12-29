@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎡 Lucky Spin Wheel</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Outfit:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-effects">
+        <div class="spotlight spotlight-1"></div>
+        <div class="spotlight spotlight-2"></div>
+        <div class="stars"></div>
+    </div>
+
+    <div class="container">
+        <header class="header">
+            <h1 class="title" id="pageTitle">🎡 Lucky Spin Wheel</h1>
+            <p class="subtitle" id="subtitle">Loading...</p>
+            <div class="spin-counter">
+                <span class="counter-label">Spins Remaining</span>
+                <span class="counter-value" id="spinsRemaining">0</span>
+            </div>
+        </header>
+
+        <!-- Category Selector (shown when no category specified) -->
+        <div class="category-selector" id="categorySelector">
+            <h2 class="selector-title">Choose a Category</h2>
+            <div class="category-grid" id="categoryGrid"></div>
+            <div class="url-hint">
+                <p>💡 <strong>Tip:</strong> Use URL parameters to link directly:</p>
+                <code>?category=dinner&spins=3</code>
+                <p style="margin-top: 0.75rem;">Or chain multiple categories in a session:</p>
+                <code>?session=appetizer:1,main:1,sides:3,dessert:1</code>
+            </div>
+        </div>
+
+        <main class="main-content">
+            <div class="wheel-stage">
+                <div class="wheel-pointer">▼</div>
+                <div class="wheel-frame">
+                    <div class="wheel-glow"></div>
+                    <canvas id="wheelCanvas" width="400" height="400"></canvas>
+                    <div class="wheel-center">
+                        <span class="center-text">SPIN!</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="spin-button" id="spinBtn" disabled>
+                    <span class="btn-icon">🎰</span>
+                    <span class="btn-text">SPIN THE WHEEL!</span>
+                </button>
+                <button class="reset-button" id="resetBtn">
+                    <span>🔄 Reset Game</span>
+                </button>
+            </div>
+
+            <div class="results-panel" id="resultsPanel">
+                <h2 class="results-title">🏆 Your Choices</h2>
+                <div class="results-list" id="resultsList"></div>
+            </div>
+        </main>
+
+        <!-- Winner Celebration Overlay -->
+        <div class="celebration-overlay" id="celebrationOverlay">
+            <div class="celebration-content">
+                <div class="confetti-container" id="confettiContainer"></div>
+                <div class="winner-card" id="winnerCard">
+                    <div class="winner-icon" id="winnerIcon">🎉</div>
+                    <h2 class="winner-title" id="winnerTitle">WINNER!</h2>
+                    <p class="winner-name" id="winnerName"></p>
+                    <div class="winner-buttons">
+                        <button class="spin-again-btn" id="spinAgainBtn">🔄 Spin Again</button>
+                        <button class="continue-btn" id="continueBtn">Continue</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Final Results Overlay -->
+        <div class="final-overlay" id="finalOverlay">
+            <div class="final-content">
+                <div class="trophy-animation">🏆</div>
+                <h2 class="final-title">All Spins Complete!</h2>
+                <div class="final-results" id="finalResults"></div>
+                <button class="play-again-btn" id="playAgainBtn">🎡 Play Again</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="wheel.js"></script>
+</body>
+</html>
